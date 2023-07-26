@@ -23,7 +23,7 @@ cp wrangler.toml.example wrangler.toml
 Setup a Cloudflare D1 sqlite database:
 
 ```
-wrangler d1 create htmljs-auth --experimental-backend
+wrangler d1 create htmxjs-auth --experimental-backend
 ```
 
 Copy the ouput starting `[[d1_databases]]` to the end of your `wrangler.toml` file.
@@ -31,7 +31,7 @@ Copy the ouput starting `[[d1_databases]]` to the end of your `wrangler.toml` fi
 Load db with schema an example data:
 
 ```
-wrangler d1 execute htmljs-auth --local --file=./db/schema.sql
+wrangler d1 execute htmxjs-auth --local --file=./db/schema.sql
 ```
 
 Install dependencies and run dev server:

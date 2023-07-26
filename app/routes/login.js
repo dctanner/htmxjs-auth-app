@@ -1,5 +1,4 @@
 /** @jsx jsx */
-/** @jsxFrag  Fragment */
 import { jsx } from 'hono/jsx'
 
 export const LoginView = ({ context }) => {
