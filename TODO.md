@@ -1,4 +1,1 @@
-Magic link wait page.
-Send magic link email with mailchannels. Try md > html conversion somehow.
-Magic link url which logs you in an redirects to url set in env var
-Actual login with jwt
+Fork stu's cloudflare-auth into htmxjs org, migrate it to new struture and then copy views and email code from here into it
