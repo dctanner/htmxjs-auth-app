@@ -14,3 +14,23 @@ export const LoginView = ({ context }) => {
     </div>
   )
 }
+
+export const LoginLinkSentView = ({ context }) => (
+  <div class="flex flex-col">
+    <h2 class="mb-8 text-2xl font-semibold text-center">Check your email</h2>
+    <p>A magic login link has been sent to your email address..</p>
+  </div>
+)
+
+
+export const LoginPost = async ({ context }) => {
+  const formData = await context.req.parseBody()
+  const parsed = userSchema.safeParse(formData)
+  if (parsed.success) {
+    await context.env.DB.prepare("INSERT INTO users (email) VALUES (?)").bind(parsed.data.email).run()
+    context.header('HX-Location', `/verify`)
+    return
+  } else {
+    return <SignupView email={parsed.data.email} errors={parsed.error.flatten().fieldErrors} />
+  }
+}

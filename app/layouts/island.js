@@ -6,7 +6,7 @@ const IslandLayout = async ({ context, children }) => {
     <div class="text-center">
       {/* TODO make My App a Worker env var */}
       <h1 class="mt-20 mb-12 text-4xl font-bold text-gray-800">My App</h1>
-      <div id="island" class="mx-auto w-full md:max-w-sm px-7 py-10 overflow-hidden bg-white md:rounded-lg shadow-xl">
+      <div id="island" class="mx-auto mb-8 w-full md:max-w-sm px-7 py-10 overflow-hidden bg-white md:rounded-lg shadow-xl">
         {children}
       </div>
     </div>
