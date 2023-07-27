@@ -49,5 +49,18 @@ pnpm run deploy
 
 ## Sending emails
 
-Cloudflare Workers provides free transactional email via MailChannels. You do not need a MailChannels account, but you do need to configure some DNS records for your domain. Follow these steps: https://support.mailchannels.com/hc/en-us/articles/4565898358413-Sending-Email-from-Cloudflare-Workers-using-MailChannels-Send-API
-You can also set an SPF record https://support.mailchannels.com/hc/en-us/articles/200262610-Set-up-SPF-Records and optionally add a DKIM record to your domain to improve email deliverability https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature
+Cloudflare Workers provides free transactional email via MailChannels. You do not need a MailChannels account, but you do need to configure some DNS records for your domain. Follow these steps (summarized below): https://support.mailchannels.com/hc/en-us/articles/4565898358413-Sending-Email-from-Cloudflare-Workers-using-MailChannels-Send-API
+
+1. Add a `TXT` record to your domain with the following values:
+
+		- Name: `@`
+		- Value: `v=spf1 a mx include:relay.mailchannels.net ~all`
+
+2. Create a `TXT` record with the following values:
+
+		- Name: `_mailchannels`
+		- Value: `v=mc1 cfid=myworker.workers.dev` (replacing `myworker` with the name of your deployed Cloudflare Worker)
+
+### Setup DKIM (optional)
+
+Optionally add a DKIM record to your domain to improve email deliverability by following these steps:  https://support.mailchannels.com/hc/en-us/articles/7122849237389-Adding-a-DKIM-Signature
