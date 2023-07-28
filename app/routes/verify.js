@@ -1,7 +1,5 @@
-/** @jsx jsx */
-import { jsx } from 'hono/jsx'
 import { setFlashMessage } from '../../htmljs'
-import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
+import { setCookie } from 'hono/cookie'
 import { verifyTokenAndGetUser, generateJWT } from '../lib/magiclink'
 import { authConfig } from '../lib/constants'
 
@@ -15,14 +13,7 @@ export const VerifyMagicLink = async (context) => {
     return context.redirect(authConfig.redirectTo)
   } catch (e) {
     console.log(e)
-    setFlashMessage(context, 'Magic link is either invalid or expired, please try again.')
+    setFlashMessage(context, 'Magic link is invalid or expired')
     return context.redirect(new URL(context.req.url).origin + '/' + action)
   }
 }
-
-const InvalidMagicLinkView = () => (
-  <div class="flex flex-col">
-    <h2 class="mb-8 text-2xl font-semibold text-center">Invalid magic link</h2>
-    <p>This magic link is either invalid or expired. Please <a href="/login">login</a> or <a href="/signup">signup</a> again.</p>
-  </div>
-)
