@@ -2,13 +2,13 @@
 import { jsx } from 'hono/jsx'
 import { generateAndSendMagicLink } from '../lib/magiclink'
 
-export const LoginView = ({ context, errors }) => {
+export const LoginView = ({ context, values, errors }) => {
   return (
     <div class="flex flex-col">
       <h2 class="mb-8 text-2xl font-semibold text-center">Log in</h2>
       <form hx-post="/login" hx-target="#island">
-        <input type="text" name="email" id="email" class="form-input-text" placeholder="Email address" />
-        <FormErrorText>{errors?.name}</FormErrorText>
+        <input type="text" name="email" id="email" class="form-input-text" placeholder="Email address" value={values?.email} />
+        <FormErrorText>{errors?.email}</FormErrorText>
         <div class="block">
           <button class="btn-lg-blue">Log in with email</button>
         </div>
@@ -31,9 +31,8 @@ export const LoginPost = async ({ context }) => {
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
     await generateAndSendMagicLink(context, new URL(context.req.url).origin, parsed.data.email)
-    context.header('HX-Push', `/login-verify`)
     return <LoginLinkSentView />
   } else {
-    return <SignupView email={parsed.data.email} errors={parsed.error.flatten().fieldErrors} />
+    return <LoginView values={{ email: formData.email }} errors={parsed.error.flatten().fieldErrors} />
   }
 }

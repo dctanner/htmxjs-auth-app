@@ -5,12 +5,12 @@ import { userSchema } from '../lib/zodSchema'
 import { FormErrorText } from '../components/forms'
 import { generateAndSendMagicLink } from '../lib/magiclink'
 
-export const SignupView = ({ context, errors }) => (
+export const SignupView = ({ context, values, errors }) => (
   <div class="flex flex-col">
     <h2 class="mb-8 text-2xl font-semibold text-center">Sign up</h2>
     <form hx-post="/signup" hx-target="#island">
-      <input type="text" name="email" id="email" class="form-input-text" placeholder="Email address" />
-      <FormErrorText>{errors?.name}</FormErrorText>
+      <input type="text" name="email" id="email" class="form-input-text" placeholder="Email address" value={values?.email} />
+      <FormErrorText>{errors?.email}</FormErrorText>
       <div class="block">
         <button class="btn-lg-blue">Sign up with email</button>
       </div>
@@ -23,13 +23,13 @@ export const SignupView = ({ context, errors }) => (
 export const SignupPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
+  console.log(JSON.stringify(parsed, null, 2))
   if (parsed.success) {
     await context.env.DB.prepare("INSERT OR IGNORE INTO users (uid, email) VALUES (?, ?)").bind(uuidv4(), parsed.data.email).run()
     await generateAndSendMagicLink(context, new URL(context.req.url).origin, parsed.data.email)
-    // context.header('HX-Location', `/signup-verify`); return
     return <SignupLinkSentView />
   } else {
-    return <SignupView email={parsed.data.email} errors={parsed.error.flatten().fieldErrors} />
+    return <SignupView values={{ email: formData.email }} errors={parsed.error.flatten().fieldErrors} />
   }
 }
 
