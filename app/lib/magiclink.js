@@ -7,11 +7,11 @@ export const generateAndSendMagicLink = async (context, origin, email) => {
   const user = await context.env.DB.prepare("SELECT * FROM users WHERE email=?").bind(email).first()
   if (!user) return false // If this is a login and they don't exist we just silently don't send a link
   const token = uuidv4()
-  await context.env.DB.prepare("INSERT INTO user_tokens (email, token) VALUES (?, ?) ON CONFLICT(email) DO UPDATE SET token=?, created_at=DATETIME('now')").bind(email, token, token).run()
+  await context.env.DB.prepare("INSERT INTO user_tokens (email, token) VALUES (?1, ?2) ON CONFLICT(email) DO UPDATE SET token=?2, created_at=DATETIME('now')").bind(email, token).run()
   if (!user.verified) {
-    await sendSignupMagicLinkEmail(context, email, `${origin}/verify?token=${token}`)
+    await sendSignupMagicLinkEmail(context, email, `${origin}/verify?token=${token}&action=signup`)
   } else {
-    await sendLoginMagicLinkEmail(context, email, `${origin}/verify?token=${token}`)
+    await sendLoginMagicLinkEmail(context, email, `${origin}/verify?token=${token}&action=login`)
   }
   return true
 }
@@ -19,6 +19,8 @@ export const generateAndSendMagicLink = async (context, origin, email) => {
 export const verifyTokenAndGetUser = async (context, token) => {
   const userToken = await context.env.DB.prepare("SELECT * FROM user_tokens WHERE token=?").bind(token).first()
   // TODO handle expired tokens. Set token expiry hours in env, check against user_tokens.created_at
+  console.log('userToken', userToken)
+  console.log('token', token)
   if (!userToken) throw new Error('Token not found');
   await context.env.DB.prepare("DELETE FROM user_tokens WHERE token=?").bind(token).run()
   const user = await context.env.DB.prepare("SELECT * FROM users WHERE email=?").bind(userToken.email).first()
@@ -28,7 +30,7 @@ export const verifyTokenAndGetUser = async (context, token) => {
 }
 
 export const generateJWT = async (uid, email) => {
-  const secret = new TextEncoder().encode(config.secretKey)
+  const secret = new TextEncoder().encode(authConfig.secretKey)
   const alg = 'HS256'
   const jwt = await new jose.SignJWT({ uid, email })
     .setProtectedHeader({ alg })

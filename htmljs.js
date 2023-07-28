@@ -1,6 +1,10 @@
 import { html } from 'hono/html'
+import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 
-// These functions form the basis of the html.js framework and will be moved to a separate lib
+// TODO move to htmxjs lib
+export const setFlashMessage = (context, message) => {
+  setCookie(context, 'flash', message, { path: '/', maxAge: 30, sameSite: 'Lax', httpOnly: true, secure: true })
+}
 
 export const view = (viewToRender) => {
   return async (c) => {

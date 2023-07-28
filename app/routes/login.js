@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'hono/jsx'
+import { FormErrorText } from '../components/forms'
 import { generateAndSendMagicLink } from '../lib/magiclink'
 
 export const LoginView = ({ context, values, errors }) => {

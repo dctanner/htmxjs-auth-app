@@ -4,16 +4,16 @@ import AppLayout from './layouts/app'
 import IslandLayout from './layouts/island'
 import { LoginView, LoginPost } from './routes/login'
 import { SignupView, SignupPost } from './routes/signup'
-import { VerifyPost } from './routes/verify'
+import { VerifyMagicLink } from './routes/verify'
 
 const app = new Hono()
 
+app.get('/verify', VerifyMagicLink) // Note we don't use view() here and also avoid all layouts, as we want to do a an immediate redirect without loading the app if the login token is valid.
 app.use('*', rootLayout(AppLayout))
 app.use('*', layout(IslandLayout))
 app.get('/login', view(LoginView))
 app.post('/login', view(LoginPost))
 app.get('/signup', view(SignupView))
 app.post('/signup', view(SignupPost))
-app.post('/verify', view(VerifyPost))
 
 export default app
