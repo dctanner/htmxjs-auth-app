@@ -19,8 +19,6 @@ export const generateAndSendMagicLink = async (context, origin, email) => {
 export const verifyTokenAndGetUser = async (context, token) => {
   const userToken = await context.env.DB.prepare("SELECT * FROM user_tokens WHERE token=?").bind(token).first()
   // TODO handle expired tokens. Set token expiry hours in env, check against user_tokens.created_at
-  console.log('userToken', userToken)
-  console.log('token', token)
   if (!userToken) throw new Error('Token not found');
   await context.env.DB.prepare("DELETE FROM user_tokens WHERE token=?").bind(token).run()
   const user = await context.env.DB.prepare("SELECT * FROM users WHERE email=?").bind(userToken.email).first()

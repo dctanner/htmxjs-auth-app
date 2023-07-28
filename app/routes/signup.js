@@ -23,7 +23,6 @@ export const SignupView = ({ context, values, errors }) => (
 export const SignupPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
-  console.log(JSON.stringify(parsed, null, 2))
   if (parsed.success) {
     await context.env.DB.prepare("INSERT OR IGNORE INTO users (uid, email) VALUES (?, ?)").bind(uuidv4(), parsed.data.email).run()
     await generateAndSendMagicLink(context, new URL(context.req.url).origin, parsed.data.email)
