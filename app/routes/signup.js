@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'hono/jsx'
+import { v4 as uuidv4 } from 'uuid';
 import { userSchema } from '../lib/zodSchema'
 import { FormErrorText } from '../components/forms'
 import { generateAndSendMagicLink } from '../lib/magiclink'
@@ -23,8 +24,8 @@ export const SignupPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
-    await context.env.DB.prepare("INSERT OR IGNORE INTO users (email) VALUES (?)").bind(parsed.data.email).run()
-    generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email, token)
+    await context.env.DB.prepare("INSERT OR IGNORE INTO users (uid, email) VALUES (?, ?)").bind(uuidv4(), parsed.data.email).run()
+    await generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email)
     // context.header('HX-Location', `/signup-verify`); return
     context.header('HX-Push', `/signup-verify`)
     return <SignupLinkSentView />

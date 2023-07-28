@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'hono/jsx'
+import { generateAndSendMagicLink } from '../lib/magiclink'
 
 export const LoginView = ({ context, errors }) => {
   return (
@@ -29,7 +30,7 @@ export const LoginPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
-    await context.env.DB.prepare("INSERT INTO users (email) VALUES (?)").bind(parsed.data.email).run()
+    await generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email)
     context.header('HX-Push', `/login-verify`)
     return <LoginLinkSentView />
   } else {
