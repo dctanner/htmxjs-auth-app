@@ -30,7 +30,7 @@ export const LoginPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
-    await generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email)
+    await generateAndSendMagicLink(context, new URL(context.req.url).origin, parsed.data.email)
     context.header('HX-Push', `/login-verify`)
     return <LoginLinkSentView />
   } else {

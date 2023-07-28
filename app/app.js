@@ -4,6 +4,7 @@ import AppLayout from './layouts/app'
 import IslandLayout from './layouts/island'
 import { LoginView, LoginPost, LoginLinkSentView } from './routes/login'
 import { SignupView, SignupPost, SignupLinkSentView } from './routes/signup'
+import { VerifyPost } from './routes/verify'
 
 const app = new Hono()
 

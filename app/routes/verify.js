@@ -6,7 +6,7 @@ import { authConfig } from '../lib/constants'
 
 export const VerifyPost = async ({ context }) => {
   const token = context.req.query('token')
-  const user = await verifyTokenAndGetUser(token)
+  const user = await verifyTokenAndGetUser(context, token)
   if (!user) return <InvalidMagicLinkView />
   const jwt = await generateJWT(user.uid, user.email)
   setCookie(context, authConfig.cookieName, jwt, { domain: authConfig.domain, path: '/', maxAge: authConfig.expiry, sameSite: 'Lax', httpOnly: true, secure: true })

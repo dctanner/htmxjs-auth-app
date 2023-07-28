@@ -1,6 +1,6 @@
 import { emailConfig } from "./constants";
 
-export const sendEmail = async (payload) => {
+export const sendEmail = async (context, payload) => {
   // Mailchannels not supported on localhost so just log the email
   if (new URL(context.req.url).hostname === "localhost") {
     console.log("Email: ", JSON.stringify(payload, null, 2))
@@ -27,8 +27,8 @@ export const sendEmail = async (payload) => {
   }
 }
 
-export const sendSignupMagicLinkEmail = async (to, link) => {
-  return await sendEmail({
+export const sendSignupMagicLinkEmail = async (context, to, link) => {
+  return await sendEmail(context, {
     personalizations: [
       {
         to: [{ email: to }],
@@ -48,8 +48,8 @@ export const sendSignupMagicLinkEmail = async (to, link) => {
   })
 }
 
-export const sendLoginMagicLinkEmail = async (to, link) => {
-  return await sendEmail({
+export const sendLoginMagicLinkEmail = async (context, to, link) => {
+  return await sendEmail(context, {
     personalizations: [
       {
         to: [{ email: to }],

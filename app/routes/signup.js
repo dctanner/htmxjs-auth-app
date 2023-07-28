@@ -25,9 +25,8 @@ export const SignupPost = async ({ context }) => {
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
     await context.env.DB.prepare("INSERT OR IGNORE INTO users (uid, email) VALUES (?, ?)").bind(uuidv4(), parsed.data.email).run()
-    await generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email)
+    await generateAndSendMagicLink(context, new URL(context.req.url).origin, parsed.data.email)
     // context.header('HX-Location', `/signup-verify`); return
-    context.header('HX-Push', `/signup-verify`)
     return <SignupLinkSentView />
   } else {
     return <SignupView email={parsed.data.email} errors={parsed.error.flatten().fieldErrors} />
