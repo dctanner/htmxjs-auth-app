@@ -1,4 +1,4 @@
-import { setFlashMessage } from '../../htmljs'
+import { setFlashMessage } from '../lib/flash'
 import { setCookie } from 'hono/cookie'
 import { verifyTokenAndGetUser, generateJWT } from '../lib/magiclink'
 import { authConfig } from '../lib/constants'

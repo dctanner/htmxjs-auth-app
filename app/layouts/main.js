@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from 'hono/jsx'
-import { getFlashMessage } from '../../htmljs'
+import { getFlashMessage } from '../lib/flash'
 
-const MainLayout = async ({ context, children }) => {
-  const flashMessage = await getFlashMessage(context)
+const MainLayout = ({ context, children }) => {
+  const flashMessage = getFlashMessage(context)
 
   return (
     <div class="text-center">
