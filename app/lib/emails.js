@@ -1,3 +1,5 @@
+import { emailConfig } from "./constants";
+
 export const sendEmail = async (payload) => {
   // Mailchannels not supported on localhost so just log the email
   if (new URL(context.req.url).hostname === "localhost") {
@@ -25,7 +27,7 @@ export const sendEmail = async (payload) => {
   }
 }
 
-export const sendSignupVerifyEmail = async (to, link) => {
+export const sendSignupMagicLinkEmail = async (to, link) => {
   return await sendEmail({
     personalizations: [
       {
@@ -33,14 +35,35 @@ export const sendSignupVerifyEmail = async (to, link) => {
       },
     ],
     from: {
-      email: 'sender@example.com',
-      name: 'Auth',
+      email: emailConfig.from,
+      name: emailConfig.name,
     },
     subject: 'Verify your email address',
     content: [
       {
         type: 'text/plain',
         value: 'Click this link to verify your email address: ' + link,
+      },
+    ],
+  })
+}
+
+export const sendLoginMagicLinkEmail = async (to, link) => {
+  return await sendEmail({
+    personalizations: [
+      {
+        to: [{ email: to }],
+      },
+    ],
+    from: {
+      email: emailConfig.from,
+      name: emailConfig.name,
+    },
+    subject: 'Confirm login',
+    content: [
+      {
+        type: 'text/plain',
+        value: 'Click this link to login: ' + link,
       },
     ],
   })

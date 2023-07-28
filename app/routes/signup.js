@@ -2,7 +2,7 @@
 import { jsx } from 'hono/jsx'
 import { userSchema } from '../lib/zodSchema'
 import { FormErrorText } from '../components/forms'
-import { generateAndSendMagicLink } from '../lib/magicLink'
+import { generateAndSendMagicLink } from '../lib/magiclink'
 
 export const SignupView = ({ context, errors }) => (
   <div class="flex flex-col">
