@@ -11,9 +11,10 @@ app.use('*', rootLayout(AppLayout))
 app.use('*', layout(IslandLayout))
 app.get('/login', view(LoginView))
 app.post('/login', view(LoginPost))
-app.get('/login-link', view(LoginLinkSentView))
+app.get('/login-verify', view(LoginLinkSentView))
 app.get('/signup', view(SignupView))
 app.post('/signup', view(SignupPost))
-app.get('/signup-link', view(SignupLinkSentView))
+app.get('/signup-verify', view(SignupLinkSentView))
+app.post('/verify', view(VerifyPost))
 
 export default app

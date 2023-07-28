@@ -2,7 +2,7 @@
 import { jsx } from 'hono/jsx'
 import { userSchema } from '../lib/zodSchema'
 import { FormErrorText } from '../components/forms'
-import { sendSignupVerifyEmail } from '../emails'
+import { generateAndSendMagicLink } from '../lib/magicLink'
 
 export const SignupView = ({ context, errors }) => (
   <div class="flex flex-col">
@@ -23,11 +23,10 @@ export const SignupPost = async ({ context }) => {
   const formData = await context.req.parseBody()
   const parsed = userSchema.safeParse(formData)
   if (parsed.success) {
-    await context.env.DB.prepare("INSERT INTO users (email) VALUES (?)").bind(parsed.data.email).run()
-    // TODO handle user already existing. Send verify email again in this case.
-    // TODO send verify email
-    await sendSignupVerifyEmail(parsed.data.email, "http://localhost/magiclink")
-    context.header('HX-Push', `/signup-link`)
+    await context.env.DB.prepare("INSERT OR IGNORE INTO users (email) VALUES (?)").bind(parsed.data.email).run()
+    generateAndSendMagicLink(new URL(context.req.url).origin, parsed.data.email, token)
+    // context.header('HX-Location', `/signup-verify`); return
+    context.header('HX-Push', `/signup-verify`)
     return <SignupLinkSentView />
   } else {
     return <SignupView email={parsed.data.email} errors={parsed.error.flatten().fieldErrors} />
